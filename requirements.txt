@@ -1,0 +1,13 @@
+tqdm
+numpy
+ipython
+pillow
+matplotlib
+plotly==5.24.1
+torch>=2.0.0
+
+## Optional Dependencies ##
+# pytest
+# wandb
+# torch>=2.0.0
+# torchvision==0.19.1
