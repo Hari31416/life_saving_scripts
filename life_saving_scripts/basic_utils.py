@@ -11,7 +11,7 @@ END = "\033[0m"
 BOLD = "\033[1m"
 BROWN = "\033[0;33m"
 ITALIC = "\033[3m"
-LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+LOG_LEVEL = os.getenv("LOG_LEVEL", "warning").upper()
 
 
 def set_logger_level_to_all_local(level: int) -> None:
@@ -328,15 +328,18 @@ class Config:
         return params
 
 
-def set_publish_plotly_template() -> None:
+def set_publish_plotly_template(mode="light") -> None:
     """Sets the plotly template for publication-ready plots."""
     import plotly.graph_objects as go
     import plotly.io as pio
 
+    text_color = "black" if mode == "light" else "white"
+    background_color = "white" if mode == "light" else "black"
+
     pio.renderers.default = "notebook"
     font_family = "Times New Roman"
 
-    def get_font_dict(size, color="black"):
+    def get_font_dict(size, color=text_color):
         return dict(
             size=size,
             color=color,
@@ -365,34 +368,40 @@ def set_publish_plotly_template() -> None:
                 ),
                 tickfont=get_font_dict(16),
             ),
-        )
+            plot_bgcolor=background_color,
+            paper_bgcolor=background_color,
+        ),
     )
     pio.templates.default = "publish"
-    logger.info("Plotly template ready for publication.")
+    logger.info(f"Plotly template ready for publication {mode} mode.")
 
 
-def set_publish_matplotlib_template() -> None:
+def set_publish_matplotlib_template(mode="light") -> None:
     """Sets the matplotlib template for publication-ready plots."""
     import matplotlib.pyplot as plt
 
+    text_color = "black" if mode == "light" else "white"
+    background_color = "white" if mode == "light" else "black"
     plt.rcParams.update(
         {
             "font.size": 18,
-            "axes.labelcolor": "#000000",
+            "axes.labelcolor": text_color,
             "axes.labelsize": 18,
             "axes.labelweight": "bold",
             "xtick.labelsize": 16,
             "ytick.labelsize": 16,
-            "xtick.color": "#000000",
-            "ytick.color": "#000000",
+            "xtick.color": text_color,
+            "ytick.color": text_color,
             "axes.grid": True,
-            "axes.facecolor": "#FFFFFF",
-            "figure.facecolor": "#FFFFFF",
+            "axes.facecolor": background_color,
+            "figure.facecolor": background_color,
             "figure.titlesize": 20,
             "figure.titleweight": "bold",
-            "grid.color": "#D3D3D3",
-            "grid.linewidth": 1.5,
+            "grid.color": "#948b72",
+            "grid.linewidth": 1,
             "grid.linestyle": "--",
+            "axes.edgecolor": text_color,
+            "axes.linewidth": 0.5,
         }
     )
-    logger.info("Matplotlib template ready for publication.")
+    logger.info(f"Matplotlib template ready for publication {mode} mode.")
